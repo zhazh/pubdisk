@@ -1,0 +1,4 @@
+FLASK_APP=pubdisk
+FLASK_ENV=development
+FLASK_RUN_HOST=0.0.0.0
+BRAND_NAME=Pubdisk

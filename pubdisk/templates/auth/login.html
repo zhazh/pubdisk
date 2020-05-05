@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{%block title%}{{brand_name}} - Login{%endblock%}
+{% block main %}
+<div></div>
+<div class="container-fluid login">
+	<form name="login" action="{{url_for('auth.login')}}" method="POST">
+		{{form.hidden_tag()}}
+		<h3 class="font-weight-normal text-center">Sign In</h3>
+		<div class="form-group">
+			{{form.username(size=40, class="form-control", placeholder="Username")}}
+			{% for error in form.username.errors %}
+			  <label class="error">{{error}}</label>
+			{% endfor %}
+		</div>
+		<div class="form-group">
+			{{form.password(size=40, class="form-control", placeholder="Password")}}
+			{% for error in form.password.errors %}
+			  <label class="error">{{error}}</label>
+			{% endfor %}
+		</div>
+		<div class="checkbox">
+			<label class="form-group">
+				{{form.remember_me}}
+				{{form.remember_me.label}}
+			</label>
+		</div>
+		{{form.submit(class='btn btn-primary btn-block')}}
+	</form>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+$("form[name='login']").validate({
+	rules: {
+		username: {
+			required: true,
+			maxlength: 20
+		},
+		password: {
+			required: true,
+			maxlength: 20
+		}
+	},
+	messages: {
+		username: {
+			required: 'Username required',
+			maxlength: 'Length more than 20 characters'
+		},
+		password: {
+			required: 'Password required',
+			maxlength: 'Length more than 20 characters'
+		}
+	},
+});
+</script>
+{% endblock %}

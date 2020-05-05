@@ -1,0 +1,111 @@
+html body {
+	margin: 0;
+	height:100vh;
+}
+
+.adms-main {
+	height: 100vh;
+	padding-top:50px;
+	display: flex;
+	flex-direction: row;
+	overflow-y:hidden;
+}
+
+.adms-main > div:first-child {
+	overflow: auto;
+	transition: width 500ms;
+}
+
+.adms-main > div:last-child {
+	padding: 10px 15px;
+	flex-grow:1;
+	overflow-y:scroll;
+}
+
+nav {
+	box-shadow:1px 0 2px #111;
+}
+
+.error {
+	color: #d32f2f;
+}
+
+.login {
+	display: inline;
+	background-color: #c0c0c0;
+}
+
+.adms-sidebar {	
+	padding: 20px 15px;
+	width: 320px;
+	font-size: 12px;
+	color: #000;
+	background-color: #e0e0e0;
+	border-right: 1px solid #bdbdbd;
+	box-sizing: border-box;
+}
+
+.adms-page {
+	display: flex;
+	flex-direction: column;
+}
+
+.adms-page > .path {
+	font-size: 14px;
+	padding: 10px 15px;
+}
+
+.adms-page > .node-list {
+	flex-grow: 1;
+	padding:0 15px;
+	font-size: 12px;
+}
+
+form[name=login] {
+	position: fixed;
+	top: 180px;
+	right: 150px;
+	width: 300px;
+	height: 320px;
+	padding: 30px 20px;
+	border-radius: 10px;
+	background-color: #fff;
+}
+
+form[name=login] input[type=text] {
+	margin: 10px 0;
+}
+
+audio {
+	width: 260px;
+	height: 60px;
+}
+
+/* for pad or mobile. */
+@media screen and (max-width:992px) {
+	.adms-main > div:first-child {
+		width: 0; 
+		transition: width 500ms;
+		padding: 0;
+	}
+
+    .adms-main > div:first-child > * {
+        display: none;
+	}
+	
+	form[name=login] {
+		position: static;
+		margin: auto;
+		margin-top: 100px;
+	}
+}
+
+/* fixed bootstarp modal moved. */
+body {
+	padding-right: 0px !important;
+}
+
+*.modal-open {
+	overflow-y: scroll;
+	padding-right: 0 !important;
+}

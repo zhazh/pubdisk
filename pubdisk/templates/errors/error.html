@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{%block title%}{{error.code}}{%endblock%}
+{% block main %}
+<div>
+    <div class="page-header">
+        <h1>{{error.name}}</h1>
+    </div>
+    <div class="page-content">
+        <h4>{{error.description}}</h4>
+    </div>
+</div>
+{% endblock %}

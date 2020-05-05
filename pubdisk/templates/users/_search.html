@@ -1,0 +1,18 @@
+<div class="path">
+Result of search "{{keywords}}" files.
+</div>
+<div class="node-list">
+    <table class="table">
+        <tr>
+            <td>Directory</td>
+            <td>Name</td>
+        </tr>
+        {% for node in node_list %}
+        <tr>
+            <td><a href="#{{url_for('users.home', path=node['dir'])}}">{{node["dir"]}}</a></td>
+            <td><a href="{{url_for('users.download', path=node['path'])}}">{{node["name"]}}</a></td>
+        </tr>
+        {% endfor %}
+    </table>    
+</div>
+

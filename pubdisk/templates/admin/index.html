@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block title %}
+{{brand_name}} - Admin
+{% endblock %}
+
+{% block main %}
+<div class="adms-sidebar">
+    <ul class="nav nav-pills nav-stacked">
+        <li><a href="{{url_for('admin.index')}}">User manager</a></li>
+        <li><a href="#modal-newuser" data-toggle="modal">New user</a></li>
+    </ul>
+</div>
+
+<div id="modal-newuser" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title">Create user</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-newuser">
+                    <div class="form-group">
+                        <label>User's name</label>
+                        <input name="username" type="text" class="form-control" placeholder="username">
+                    </div>
+                    <div class="form-group">
+                        <label>User's home</label>
+                        <input name="userhome" type="text" class="form-control" value="/">
+                        <div id="user-hometree">
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="adms-page">
+    <h4>User manager</h4>
+    <table class="table">
+        <tr>
+            <td>Username</td>
+            <td>Home</td>
+            <td>Operation</td>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{user.name}}</td>
+            <td>{{user.home}}</td>
+            <td>
+                <button name="del-user" class="btn btn-sm btn-danger" user_id="{{user.id}}" user_name="{{user.name}}">Delete</button>
+                <button name="reset-password" class="btn btn-sm btn-info" user_id="{{user.id}}" user_name="{{user.name}}">Initialize Password</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+$(document).ready(function(){
+    $('#user-hometree').jstree({ 'core' : {
+            'data' : {'asyn':true, 'url':"{{url_for('users.tree')}}"}
+        }
+    });
+
+    $('#user-hometree').on("changed.jstree", function (e, data) {
+        url = data.selected[0]
+        $("input[name='userhome']").val(url);
+    });
+
+    $("#form-newuser").validate({
+        rules: {
+            username: "required",
+        },
+        messages: {
+            username: "Please input username.",
+        }
+    });
+    
+    $('#form-newuser').submit(function(e){
+        if (!$(this).valid()) {
+            e.preventDefault();
+            return;
+        }
+        $.post("{{url_for('admin.new_user')}}", 
+                $(this).serialize(), 
+                function(data){
+                    if (data.code == 0) {
+                        alert("New user created and password is " + data.msg);
+                        window.location.reload();
+                    } else {
+                        alert("Create new user occurred an error:" + data.msg);
+                    }
+                }, "json"
+        );
+        $("#modal-newuser").modal('hide');
+        e.preventDefault();
+        $(this)[0].reset();
+    });
+
+    $("button[name='del-user']").click(function(){
+        var user_id = $(this).attr('user_id');
+        var user_name = $(this).attr('user_name');
+        if (confirm("Will delete user '" + user_name + "' Are you sure?'")) {
+            $.post("{{url_for('admin.del_user')}}", 
+                {'user_id': user_id}, 
+                function(data){
+                    if (data.code == 0) {
+                        window.location.reload();
+                    } else {
+                        alert("Delete user '"+ user_name + "' occurred an error:" + data.msg);
+                    }
+                }, "json"
+            );
+        }
+    });
+
+    $("button[name='reset-password']").click(function(){
+        var user_id = $(this).attr('user_id');
+        var user_name = $(this).attr('user_name');
+        $.post("{{url_for('admin.reset_password')}}", 
+            {'user_id': user_id}, 
+            function(data){
+                if (data.code == 0) {
+                    alert("User '"+ user_name + "' password reset to '"+ data.msg + "'");
+                    window.location.reload();
+                } else {
+                    alert("Initialize user password occurred an error:" + data.msg);
+                }
+            }, "json"
+        );
+    });
+
+});
+</script>
+{% endblock %}

@@ -1,0 +1,65 @@
+<div class="path">
+    <ol class="breadcrumb">
+        {% for path in paths %}
+        <li><a href="#{{url_for('users.home', path=path['path'])}}">{{path['name']}}</a></li>
+        {% endfor %}
+    </ol>
+</div>
+
+<div class="node-list">
+    <table class="table">
+        <tr>
+            <td>Created</td>
+            <td>Name</td>
+            <td>Type</td>
+            <td>Size</td>
+            <td>Last Visit</td>
+            <td>Last modify</td>
+        </tr>
+        {% for node in node_list %}
+        <tr>
+            <td>{{node['create']}}</td>
+            {% if node['is_dir'] %}
+            <td><a href="#{{url_for('users.home', path=node['path'])}}">{{node['name']}}</a></td>
+            {% else %}
+            {% if node['type'] == NodeTypes.AudioFile %}
+            <td><a name="audio-play" href="javascript:void(0);" src="{{url_for('users.download', path=node['path'])}}">{{node['name']}}</a></td>
+            {% else %}
+            <td><a href="{{url_for('users.download', path=node['path'])}}">{{node['name']}}</a></td>
+            {% endif %}
+            {% endif %}
+            <td>{{node['type'].name}}</td>
+            <td>{{node['size']}}</td>
+            <td>{{node['visit']}}</td>
+            <td>{{node['modify']}}</td>
+        </tr>
+        {% endfor %}
+    </table>    
+</div>
+
+<div id="modal-audioplayer" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <audio id="audioplayer" src="" controls="controls" autoplay></audio>
+                <a name="audio-download" href="" class="btn btn-info">Downloads</a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+$(document).ready(function(){
+    $("a[name='audio-play']").click(function(){
+        var url = $(this).attr("src");
+        $("#modal-audioplayer").modal("show");
+        $("#audioplayer").attr("src", url);
+        $("a[name='audio-download']").attr("href", url);
+    });
+
+    // modal audioplayer dismiss, stop audio-player
+    $("#modal-audioplayer").on("hide.bs.modal", function(e){
+        $("#audioplayer")[0].pause();
+    });
+});
+</script>
