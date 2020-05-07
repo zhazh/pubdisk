@@ -78,10 +78,12 @@ class NodeTypes(object):
 
     @classmethod
     def NodeType(cls, node_path):
-        for ndt in NodeType.register():
-            if ndt.condition(node_path):
-                return ndt
-        return dict(id=-1, name='Unknow Type')
+        try:
+            for ndt in NodeType.register():
+                if ndt.condition(node_path):
+                    return ndt
+        except:
+            return dict(id=-1, name='Unknow Type')
 
 class Node(object):
     def __init__(self, path):
