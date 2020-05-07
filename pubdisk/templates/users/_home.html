@@ -61,5 +61,12 @@ $(document).ready(function(){
     $("#modal-audioplayer").on("hide.bs.modal", function(e){
         $("#audioplayer")[0].pause();
     });
+
+	$("#modal-audioplayer").on('show.bs.modal', function(e){
+		var $this = $(this);
+		var $modal_dialog = $this.find('.modal-dialog');
+		$this.css('display', 'block');
+		$modal_dialog.css({'margin-top': Math.max(0, ($(window).height() - $modal_dialog.height()) / 2) });
+	});
 });
 </script>
