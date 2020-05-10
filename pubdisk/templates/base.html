@@ -88,6 +88,7 @@ $(document).ready(function(){
 	// search files in website.
 	$("#search-keywords").keyup(function(e){
 		if (e.keyCode == 13) {
+			// Enter key press down.
 			keywords = $.trim($(this).val());
 			if (keywords !== "") {
 				console.log("keywords:" + keywords);

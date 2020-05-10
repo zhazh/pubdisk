@@ -30,15 +30,15 @@ def _is_dir(node_path):
 
 def _is_audio_file(node_path):
     path, filename = os.path.split(node_path)
-    suffix = filename.split('.')[-1]
+    suffix = filename.split('.')[-1].lower()
     if suffix in ['mp3', 'wav']:
         return True
     return False
 
 def _is_video_file(node_path):
     path, filename = os.path.split(node_path)
-    suffix = filename.split('.')[-1]
-    if suffix in ['mp4']:
+    suffix = filename.split('.')[-1].lower()
+    if suffix in ['mp4', 'mov']:
         return True
     return False
 

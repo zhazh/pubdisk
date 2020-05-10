@@ -23,7 +23,9 @@
             <td><a href="#{{url_for('users.home', path=node['path'])}}">{{node['name']}}</a></td>
             {% else %}
             {% if node['type'] == NodeTypes.AudioFile %}
-            <td><a name="audio-play" href="javascript:void(0);" src="{{url_for('users.download', path=node['path'])}}">{{node['name']}}</a></td>
+            <td><a name="player" href="#audio-player" data-toggle="modal" src="{{url_for('users.download', path=node['path'])}}">{{node['name']}}</a></td>
+            {% elif node['type'] == NodeTypes.VideoFile %}
+            <td><a name="player" href="#video-player" data-toggle="modal" src="{{url_for('users.download', path=node['path'])}}">{{node['name']}}</a></td>
             {% else %}
             <td><a href="{{url_for('users.download', path=node['path'])}}">{{node['name']}}</a></td>
             {% endif %}
@@ -37,12 +39,23 @@
     </table>    
 </div>
 
-<div id="modal-audioplayer" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-sm" role="document">
+<div id="audio-player" name="player" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                <audio id="audioplayer" src="" controls="controls" autoplay></audio>
-                <a name="audio-download" href="" class="btn btn-info">Downloads</a>
+                <audio name="player" src="" controls="controls" autoplay></audio>
+                <a name="download" href="" class="btn btn-info">Downloads</a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id="video-player" name="player" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <video name="player" src="" controls="controls" width="565" autoplay></video>
+                <a name="download" href="" class="btn btn-info">Downloads</a>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -50,19 +63,25 @@
 
 <script>
 $(document).ready(function(){
-    $("a[name='audio-play']").click(function(){
+    /*
+      Provide auido/video player for {mp3, wav}/{mp4, mov} file.
+      ===========================================
+    */
+    $("a[name='player']").on("click", function(e){
         var url = $(this).attr("src");
-        $("#modal-audioplayer").modal("show");
-        $("#audioplayer").attr("src", url);
-        $("a[name='audio-download']").attr("href", url);
+        var modal_id = $(this).attr("href");
+        // set audio/video play src.
+        $(modal_id).find("[name='player']").attr("src", url);
+        // set audio/video download href.   
+        $(modal_id).find("[name='download']").attr("href", url);
     });
 
-    // modal audioplayer dismiss, stop audio-player
-    $("#modal-audioplayer").on("hide.bs.modal", function(e){
-        $("#audioplayer")[0].pause();
+    $("div.modal[name='player']").on("hide.bs.modal", function(e){
+        $(this).find("[name='player']")[0].pause();
     });
 
-	$("#modal-audioplayer").on('show.bs.modal', function(e){
+    // Set modal box position when appeared.
+	$("div.modal[name='player']").on('show.bs.modal', function(e){
 		var $this = $(this);
 		var $modal_dialog = $this.find('.modal-dialog');
 		$this.css('display', 'block');
